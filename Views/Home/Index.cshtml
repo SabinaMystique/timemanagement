@@ -1,0 +1,344 @@
+﻿@using System.Web.Optimization
+@using TimeManagement.Helpers
+@section Navigation {
+    @Html.Partial("Navigation")
+}
+@model TimeManagement.SearchData
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div id="container" class="span12" role="main">
+            @{ Html.IncludeClientViews(); }
+        </div>
+    </div>
+
+
+    <script type="text/html" id="tempHome">
+        <div class="controls" id="divTempHome">
+
+            <div class="well" style="display: none;" id="divSearch">
+                <table>
+                    <tr>
+                        <td>
+                            <div id="dtFrom" class="input-append">
+                              @*  @using (Html.BeginForm("txtFrom"))
+                                {
+                                   @Html.Hidden("id", "45")
+                                      *@<input data-format="dd-MM-yyyy" type="text" style="width: 100px;" id="txtFrom" name="txtFrom" type="submit"></input>
+                                @*}*@
+                              
+                                <button class="btn btn-default" type="button" id="btndtFrom" name="btndtFrom">
+                                    <i class="icon-calendar"></i>
+                                </button>
+                             
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-append">
+                                <input id="txtSearch" name="txtSearch" type="text" style="width: 300px;" placeholder="Search" />
+                                <button class="btn btn-default" type="button" id="btnSearch" name="btnSearch">
+                                    <i class="icon-search"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="dtTo" class="input-append">
+                                <input data-format="dd-MM-yyyy" type="text" style="width: 100px;" id="txtTo"></input>
+                                <button class="btn btn-default" type="button" id="btndtTo" name="btndtFrom">
+                                    <i class="icon-calendar"></i>
+                                </button>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <ul class="nav pull-right" style="margin-bottom: 30px;">
+                <li class="divider-vertical"></li>
+                <li>
+                    <div class="btn-group">
+                        <input type="button" id="btnAddNewTimesheet" value="Add new timesheet" class="btn btn-success" />
+                        <input type="button" id="btnSearchPH" value="Search" class="btn" />
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-body">
+                <p>
+                    <h3>Timesheets</h3>
+                </p>
+            </div>
+
+            <!-- Table -->
+            <table id="timesheetTable" class="table table-striped table-condensed">
+                <thead style="background-color: lightgray;">
+                    <tr>
+                        <td><strong>Date</strong></td>
+                        <td><strong>Total time</strong></td>
+                        <td><strong>Notes</strong></td>
+                        @*  <td><strong>Comment</strong></td>*@
+                        <td><strong>Edit</strong></td>
+                        <td><strong>Delete</strong></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </script>
+    @*  <script type="text/javascript">
+         $(function () {
+             $('#dtFrom').datetimepicker({
+             });
+         });
+        </script>*@
+    @* <script type="text/javascript">
+        $(function() {
+            $('#dtFrom').datetimepicker({
+                pickTime: false
+            });
+            $('#dtTo').datetimepicker({
+                pickTime: false
+            });
+        });
+</script>*@
+       <script type="text/template" id="tempEditSettings">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="btnClose" name="btnClose">&times;</button>
+            <h4 class="modal-title">Edit preferred working hours per day setting</h4>
+            <table>
+                <tr>
+                    <td>
+
+                        <label id="lblEditSettingsRequiredFields" style="display: none;"><strong>Preferred working hours is a required field.</strong></label>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div style="margin-left: 50px; margin-right: 50px">
+            <div class="control-group">
+                <label class="control-label" for="txtEditWorkingHours">Preferred working hours per day</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-tasks"></i></span>
+                        <input id="txtEditWorkingHours" name="txtEditWorkingHours" type="number" style="width: 400px;" />
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+            <button type="submit" class="btn btn-danger" id="btnCancel" data-dismiss="modal">Exit</button>
+        </div>
+        <br />
+    </script>
+    <script type="text/template" id="tempAddTimesheet">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="btnClose" name="btnClose">&times;</button>
+            <h4 class="modal-title">Add new timesheet</h4>
+            <table>
+                <tr>
+                    <td>
+
+                        <label id="lblAddTimesheetRequiredFields" style="display: none;"><strong>Date and total time are required fields.</strong></label>
+                        <label id="lblAddTimesheetTotalTimeInteger" style="display: none;"><strong>Total time is required and number.</strong></label>
+                        <label id="lblAddTimesheetSuccess" style="display: none;"><strong>You have successfully added timesheet.</strong></label></td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div style="margin-left: 50px; margin-right: 50px">
+            <div class="control-group">
+                <label class="control-label" for="dtAddTimesheetDate">Date</label>
+                <div id="dtAddTimesheetDate" class="input-prepend">
+                    <button class="btn btn-default" type="button" id="btndtAddTimesheetDate" name="btndtAddTimesheetDate" onclick="$('#dtAddTimesheetDate').datepicker().on('changeDate', function (ev) {$('#txtAddTimesheetDate').val($.format.date(new Date(ev.date.valueOf()), 'dd/MM/yyyy'));});">
+                        <i class="icon-calendar"></i>
+                    </button>
+                    <input class="datepicker" data-format="dd-MM-yyyy" type="text" style="width: 390px;" id="txtAddTimesheetDate"></input>
+                    <style>
+                        .datepicker
+                        {
+                            z-index: 1000000;
+                        }
+                    </style>
+
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="txtAddTotalTime">Total time</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-tasks"></i></span>
+                        <input id="txtAddTotalTime" name="txtAddTotalTime" type="number" style="width: 400px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="txtAddNotes">Notes</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <textarea id="txtAddNotes" name="txtAddNotes" style="width: 430px; height: 150px; max-width: 430px; min-width: 430px; max-height: 150px;" />
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+            <button type="submit" class="btn btn-danger" id="btnCancel" data-dismiss="modal">Exit</button>
+        </div>
+        <br />
+    </script>
+    <script type="text/template" id="tempEditTimesheet">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="btnCloseEdit" name="btnCloseEdit">&times;</button>
+            <h4 class="modal-title">Edit timesheet</h4>
+            <table>
+                <tr>
+                    <td>
+
+                        <label id="lblEditTimesheetRequiredFields" style="display: none;"><strong>Date and total time are required fields.</strong></label>
+                        <label id="lblEditTimesheetAmountInteger" style="display: none;"><strong>Total time is required and number.</strong></label>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div style="margin-left: 50px; margin-right: 50px">
+            <div class="control-group">
+                <label class="control-label" for="dtEditTimesheetDate">Date</label>
+                <div id="dtEditTimesheetDate" class="input-prepend">
+                    <button class="btn btn-default" type="button" id="btndtEditTimesheetDate" name="btndtEditTimesheetDate" onclick="$('#dtEditTimesheetDate').datepicker().on('changeDate', function (ev) {$('#txtEditTimesheetDate').val($.format.date(new Date(ev.date.valueOf()), 'dd/MM/yyyy'));});">
+                        <i class="icon-calendar"></i>
+                    </button>
+                    <input class="datepicker" data-format="dd-MM-yyyy" type="text" style="width: 390px;" id="txtEditTimesheetDate"></input>
+                    <style>
+                        .datepicker
+                        {
+                            z-index: 1000000;
+                        }
+                    </style>
+
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="txtEditTotalTime">Total time</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-tasks"></i></span>
+                        <input id="txtEditTotalTime" name="txtEditTotalTime" type="number" style="width: 400px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="txtEditNotes">Notes</label>
+                <div class="controls">
+                    <div class="input-prepend">
+                        <textarea id="txtEditNotes" name="txtEditNotes" style="width: 430px; height: 150px; max-width: 430px; min-width: 430px; max-height: 150px;" />
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSaveEdit">Save</button>
+            <button type="submit" class="btn btn-danger" id="btnCancelEdit" data-dismiss="modal">Exit</button>
+            <input id="txtIDEdit" name="txtIDEdit" type="hidden" />
+            <input id="txtCreatedDate" name="txtCreatedDate" type="hidden" />
+            @*    <input id="txtDateOfSheetSQL" name="txtDateOfSheetSQL" type="hidden" />*@
+        </div>
+        <br />
+    </script>
+    <script type="text/template" id="timesheetTableRows">
+        <td style="background:red;">{{$.format.date(new Date(DateOfSheet), 'dd/MM/yyyy')}}</td>
+        <td style="background:red;">{{TotalTime}}</td>
+        <td style="background:red;">{{Notes}}</td>
+        @*   <td>{{Comment}}</td>*@
+        <td style="background:red;">
+            @*      <input type="button" id="btnEditTimesheet" value="Edit" class="btn btn-info" />*@
+            <button type="button" id="btnEditTimesheet" value="Edit" class="btn btn-default btn-lg">
+                <i class="icon-edit"></i>
+            </button>
+        </td>
+        <td style="background:red;">
+            @*   <input type="button" id="btnDeleteTimesheet" value="Delete" class="btn btn-danger" />*@
+            <button type="button" id="btnDeleteTimesheet" value="Delete" class="btn btn-default btn-lg">
+                <i class="icon-remove"></i>
+            </button>
+        </td>
+    </script>
+    <script type="text/template" id="timesheetTableRows1">
+        <td style="background:green;">{{$.format.date(new Date(DateOfSheet), 'dd/MM/yyyy')}}</td>
+        <td style="background:green;">{{TotalTime}}</td>
+        <td style="background:green;">{{Notes}}</td>
+        @*   <td>{{Comment}}</td>*@
+        <td style="background:green;">
+            @*      <input type="button" id="btnEditTimesheet" value="Edit" class="btn btn-info" />*@
+            <button type="button" id="btnEditTimesheet" value="Edit" class="btn btn-default btn-lg">
+                <i class="icon-edit"></i>
+            </button>
+        </td>
+        <td style="background:green;">
+            @*   <input type="button" id="btnDeleteTimesheet" value="Delete" class="btn btn-danger" />*@
+            <button type="button" id="btnDeleteTimesheet" value="Delete" class="btn btn-default btn-lg">
+                <i class="icon-remove"></i>
+            </button>
+        </td>
+    </script>
+
+    <script type="text/html" id="tempMembership">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" id="btnCloseUserDialog" name="btnCloseUserDialog">&times;</button>
+            <h4 class="modal-title">My Account</h4>
+
+            <table>
+                <tr>
+                    <td>
+                        <label id="wrongAuthenticationData" style="display: none;"><strong>Wrong email and password combination! Please try again.</strong></label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblrequiredFields" style="display: none;"><strong>Email and password are required!</strong></label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblpasswordConfirm" style="display: none;"><strong>Paswword and confirmed password don't match!</strong></label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblEmailVal" style="display: none;"><strong>Not a valid email address!</strong></label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblUserExists" style="display: none;"><strong>User email already registered!</strong></label></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label id="lblRegistrationSuccessfull" style="display: none;"><strong>You have successfully registered, please sign in to continue.</strong></label></td>
+                </tr>
+
+
+            </table>
+        </div>
+        <br />
+        <div style="margin-left: 30px; margin-right: 30px">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#signIn" data-toggle="tab">Sign In</a></li>
+                <li><a href="#signUp" data-toggle="tab">Sign Up</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="signIn">@Html.ClientView("SignIn")</div>
+                <div class="tab-pane" id="signUp">@Html.ClientView("SignUp")</div>
+            </div>
+        </div>
+    </script>
+   
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/backbone", "~/bundles/application")
+    <script>
+        app = Application;
+        app.clientUrlPrefix = '@Html.Raw(Url.ClientUrlPrefix())';
+        app.serverUrlPrefix = '@Html.Raw(Url.ApiUrlPrefix())';
+        jQuery(function() {
+            app.start({
+                userSignnedIn: @Html.Raw(Request.IsAuthenticated.ToString().ToLowerInvariant())
+                });
+        });
+    </script>
+}

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TimeManagement.DAL.TimeSheet>
+@{
+    ViewBag.Title = "Expenses report - last 7 days";
+    
+}
+
+<ul class="nav pull-right" style="margin-bottom: 30px; margin-right: 10px;">
+    <li class="divider-vertical"></li>
+    <div class="dropdown">
+  <button class="btn dropdown-toggle btn-success" type="button" id="ddExportReport" data-toggle="dropdown">
+    Export report
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "PDF" })">Pdf</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Excel" })">Excell</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Word" })">Word</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Image" })">Image</a></li>
+  </ul>
+</div>
+</ul>
+<h2>Expenses report - last 7 days</h2>
+<table class="table table-striped table-condensed">
+
+    <thead style="background-color: lightgray;">
+        <tr>
+            <td><strong>Date</strong></td>
+            <td><strong>Description</strong></td>
+            <td><strong>Amount</strong></td>
+            <td><strong>Comment</strong></td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.DateOfSheet)</td>
+            <td>@Html.DisplayFor(modelItem => item.TotalTime)</td>
+            <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+        </tr>
+    }
+</table>
+

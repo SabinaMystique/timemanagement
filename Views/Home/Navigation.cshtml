@@ -1,0 +1,40 @@
+﻿@using TimeManagement.Helpers
+<nav id="navigation">
+    <ul class="nav">
+        <li class="divider-vertical"></li>
+        <li class="home">
+            <a href="@Url.ClientUrl("/")">
+                <i class="icon-home"></i>Timesheets
+            </a>
+        </li>
+
+        <li class="divider-vertical"></li>
+        <li  id="liReport">
+            <a href="javascript:;" id="lnkReport">
+                <i class="icon-list"></i>Report
+            </a>
+        </li>
+    </ul>
+    <ul class="nav">
+        <li class="divider-vertical"></li>
+        <li>
+            <a href="@Url.ClientUrl("/")" id="btnMembership">
+                <i class="icon-user"></i>My Account
+            </a>
+        </li>
+    </ul>
+      <ul class="nav">
+        <li class="divider-vertical"></li>
+        <li>
+            <a href="@Url.ClientUrl("/")" id="btnSettings">
+                <i class="icon-cog"></i>Settings
+            </a>
+        </li>
+    </ul>
+      <ul class="nav pull-right">
+    <li class="divider-vertical"></li>
+    <li>
+        <a href="/" id="btnLogOff" style="color:blue;display:none;">Log off</a>
+    </li>
+  </ul>
+</nav>

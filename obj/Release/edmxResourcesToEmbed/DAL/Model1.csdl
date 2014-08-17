@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TimeManagementModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TimeManagementEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="TimeSheet" EntityType="TimeManagementModel.TimeSheet" />
+    <EntitySet Name="User" EntityType="TimeManagementModel.User" />
+    <EntitySet Name="webpages_Membership" EntityType="TimeManagementModel.webpages_Membership" />
+    <EntitySet Name="webpages_OAuthMembership" EntityType="TimeManagementModel.webpages_OAuthMembership" />
+    <EntitySet Name="webpages_Roles" EntityType="TimeManagementModel.webpages_Roles" />
+    <AssociationSet Name="FK_Expense_User" Association="TimeManagementModel.FK_Expense_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="TimeSheet" EntitySet="TimeSheet" />
+    </AssociationSet>
+    <AssociationSet Name="webpages_UsersInRoles" Association="TimeManagementModel.webpages_UsersInRoles">
+      <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="TimeSheet">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="DateOfSheet" Type="DateTime" Precision="0" />
+    <Property Name="TotalTime" Type="Int32" />
+    <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+    <Property Name="UserID" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="TimeManagementModel.FK_Expense_User" FromRole="TimeSheet" ToRole="User" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+    <Property Name="Surname" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="TimeSheet" Relationship="TimeManagementModel.FK_Expense_User" FromRole="User" ToRole="TimeSheet" />
+    <NavigationProperty Name="webpages_Roles" Relationship="TimeManagementModel.webpages_UsersInRoles" FromRole="User" ToRole="webpages_Roles" />
+  </EntityType>
+  <EntityType Name="webpages_Membership">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="ConfirmationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="IsConfirmed" Type="Boolean" />
+    <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
+    <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="webpages_OAuthMembership">
+    <Key>
+      <PropertyRef Name="Provider" />
+      <PropertyRef Name="ProviderUserId" />
+    </Key>
+    <Property Name="Provider" Type="String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+    <Property Name="ProviderUserId" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="webpages_Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="User" Relationship="TimeManagementModel.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_Expense_User">
+    <End Role="User" Type="TimeManagementModel.User" Multiplicity="0..1" />
+    <End Role="TimeSheet" Type="TimeManagementModel.TimeSheet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TimeSheet">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="webpages_UsersInRoles">
+    <End Role="webpages_Roles" Type="TimeManagementModel.webpages_Roles" Multiplicity="*" />
+    <End Role="User" Type="TimeManagementModel.User" Multiplicity="*" />
+  </Association>
+</Schema>

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TimeManagement.DAL.TimeSheet>
+@{
+    ViewBag.Title = "Timesheet report";
+    
+}
+
+<ul class="nav pull-right" style="margin-bottom: 30px; margin-right: 10px;">
+    <li class="divider-vertical"></li>
+    <div class="dropdown">
+  <button class="btn dropdown-toggle btn-success" type="button" id="ddExportReport" data-toggle="dropdown">
+    Export report
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "PDF" })">Pdf</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Excel" })">Excell</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Word" })">Word</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.Action("Report", new { id = "Image" })">Image</a></li>
+  </ul>
+</div>
+</ul>
+<h2>Timesheet report</h2>
+<table class="table table-striped table-condensed">
+
+    <thead style="background-color: lightgray;">
+        <tr>
+            <td><strong>Date</strong></td>
+            <td><strong>Total time</strong></td>
+            <td><strong>Notes</strong></td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        var datetitem = String.Format("{0:dd/MM/yyyy}", item.DateOfSheet);
+        
+         <tr>
+            <td>@Html.DisplayFor(modelItem =>datetitem)</td>
+            <td>@Html.DisplayFor(modelItem => item.TotalTime)</td>
+            <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+          
+        </tr>
+    }
+</table>

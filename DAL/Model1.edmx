@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TimeManagementModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="TimeManagementModelStoreContainer">
+          <EntitySet Name="TimeSheet" EntityType="TimeManagementModel.Store.TimeSheet" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="User" EntityType="TimeManagementModel.Store.User" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Membership" EntityType="TimeManagementModel.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="TimeManagementModel.Store.webpages_OAuthMembership" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Roles" EntityType="TimeManagementModel.Store.webpages_Roles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="TimeManagementModel.Store.webpages_UsersInRoles" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_lblEditTimesheetAmountIntegerse_User" Association="TimeManagementModel.Store.FK_lblEditTimesheetAmountIntegerse_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TimeSheet" EntitySet="TimeSheet" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="TimeManagementModel.Store.fk_RoleId">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="fk_UserId" Association="TimeManagementModel.Store.fk_UserId">
+            <End Role="User" EntitySet="User" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="TimeSheet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DateOfSheet" Type="date" />
+          <Property Name="TotalTime" Type="int" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="IsDeleted" Type="bit" />
+          <Property Name="CreatedDate" Type="date" />
+          <Property Name="UserID" Type="int" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="nvarchar" MaxLength="350" />
+          <Property Name="Password" Type="nvarchar(max)" />
+          <Property Name="Name" Type="nvarchar" MaxLength="350" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="350" />
+          <Property Name="Email" Type="nvarchar" MaxLength="350" />
+          <Property Name="PreferredWorkingHours" Type="int" />
+          <Property Name="IsDeleted" Type="bit" />
+          <Property Name="CreatedDate" Type="date" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="webpages_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="nvarchar" Nullable="false" MaxLength="30" />
+          <Property Name="ProviderUserId" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_lblEditTimesheetAmountIntegerse_User">
+          <End Role="User" Type="TimeManagementModel.Store.User" Multiplicity="0..1" />
+          <End Role="TimeSheet" Type="TimeManagementModel.Store.TimeSheet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TimeSheet">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleId">
+          <End Role="webpages_Roles" Type="TimeManagementModel.Store.webpages_Roles" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="TimeManagementModel.Store.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_UserId">
+          <End Role="User" Type="TimeManagementModel.Store.User" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="TimeManagementModel.Store.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TimeManagementModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TimeManagementEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="TimeSheet" EntityType="TimeManagementModel.TimeSheet" />
+          <EntitySet Name="User" EntityType="TimeManagementModel.User" />
+          <EntitySet Name="webpages_Membership" EntityType="TimeManagementModel.webpages_Membership" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="TimeManagementModel.webpages_OAuthMembership" />
+          <EntitySet Name="webpages_Roles" EntityType="TimeManagementModel.webpages_Roles" />
+          <AssociationSet Name="FK_lblEditTimesheetAmountIntegerse_User" Association="TimeManagementModel.FK_lblEditTimesheetAmountIntegerse_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="TimeSheet" EntitySet="TimeSheet" />
+          </AssociationSet>
+          <AssociationSet Name="webpages_UsersInRoles" Association="TimeManagementModel.webpages_UsersInRoles">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="TimeSheet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DateOfSheet" Type="DateTime" Precision="0" />
+          <Property Name="TotalTime" Type="Int32" />
+          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <Property Name="UserID" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="TimeManagementModel.FK_lblEditTimesheetAmountIntegerse_User" FromRole="TimeSheet" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+          <Property Name="Surname" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="350" Unicode="true" FixedLength="false" />
+          <Property Name="PreferredWorkingHours" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="TimeSheet" Relationship="TimeManagementModel.FK_lblEditTimesheetAmountIntegerse_User" FromRole="User" ToRole="TimeSheet" />
+          <NavigationProperty Name="webpages_Roles" Relationship="TimeManagementModel.webpages_UsersInRoles" FromRole="User" ToRole="webpages_Roles" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ConfirmationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="webpages_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+          <Property Name="ProviderUserId" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="User" Relationship="TimeManagementModel.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_lblEditTimesheetAmountIntegerse_User">
+          <End Role="User" Type="TimeManagementModel.User" Multiplicity="0..1" />
+          <End Role="TimeSheet" Type="TimeManagementModel.TimeSheet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TimeSheet">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="webpages_UsersInRoles">
+          <End Role="webpages_Roles" Type="TimeManagementModel.webpages_Roles" Multiplicity="*" />
+          <End Role="User" Type="TimeManagementModel.User" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TimeManagementModelStoreContainer" CdmEntityContainer="TimeManagementEntities">
+          <EntitySetMapping Name="TimeSheet">
+            <EntityTypeMapping TypeName="TimeManagementModel.TimeSheet">
+              <MappingFragment StoreEntitySet="TimeSheet">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DateOfSheet" ColumnName="DateOfSheet" />
+                <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="TimeManagementModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PreferredWorkingHours" ColumnName="PreferredWorkingHours" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Membership">
+            <EntityTypeMapping TypeName="TimeManagementModel.webpages_Membership">
+              <MappingFragment StoreEntitySet="webpages_Membership">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ConfirmationToken" ColumnName="ConfirmationToken" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="LastPasswordFailureDate" ColumnName="LastPasswordFailureDate" />
+                <ScalarProperty Name="PasswordFailuresSinceLastSuccess" ColumnName="PasswordFailuresSinceLastSuccess" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_OAuthMembership">
+            <EntityTypeMapping TypeName="TimeManagementModel.webpages_OAuthMembership">
+              <MappingFragment StoreEntitySet="webpages_OAuthMembership">
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+                <ScalarProperty Name="ProviderUserId" ColumnName="ProviderUserId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Roles">
+            <EntityTypeMapping TypeName="TimeManagementModel.webpages_Roles">
+              <MappingFragment StoreEntitySet="webpages_Roles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="TimeManagementModel.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
+            <EndProperty Name="webpages_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="ID" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
